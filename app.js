@@ -6,7 +6,7 @@ const methodOverride = require('method-override');
 const Campground = require('./models/campground');
 
 // MongoDB 연결
-mongoose.connect('mongodb://localhost:27017/yelp-camp')
+mongoose.connect('mongodb://localhost:27017/CampInfo')
     .then(() => {
         console.log("MongoDB 연결 완료");
     }).catch(err => {
