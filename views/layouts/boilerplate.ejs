@@ -37,31 +37,31 @@
       integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
       crossorigin="anonymous"
     ></script>
-
-    <!-- 부트스트랩 사용자 정의 validation 메시지를 위한 자바스크립트-->
-    <script>
-      (() => {
-        "use strict";
-
-        // 사용자 정의 validation 메시지를 적용시키고 싶은 form을 class 선택자로 가져옴.
-        const forms = document.querySelectorAll(".needs-validation");
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach((form) => {
-          form.addEventListener(
-            "submit",
-            (event) => {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
-
-              form.classList.add("was-validated");
-            },
-            false
-          );
-        });
-      })();
-    </script>
   </body>
 </html>
+
+<!-- 부트스트랩 사용자 정의 validation 메시지를 위한 자바스크립트-->
+<script>
+  (() => {
+    "use strict";
+
+    // 사용자 정의 validation을 적용시키고 싶은 form을 class 선택자로 가져옴.
+    const forms = document.querySelectorAll(".needs-validation");
+
+    // Loop over them and prevent submission
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>
