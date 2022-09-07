@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const engine = require('ejs-mate'); // ejs 템플릿 엔진을 위한 Express.4.x 버전 레이아웃, 분할(particial), 블록(block) 함수 지원 모듈
 const methodOverride = require('method-override');
 const Campground = require('./models/campground');
+const Review = require('./models/review');
 const ExpressError = require('./utils/ExpressError');
 const catchAsyncError = require('./utils/catchAsyncError');
 
@@ -31,16 +32,16 @@ app.use(express.urlencoded({ extended: true }));
 // method-override 모듈 쿼리 스트링 설정
 app.use(methodOverride('_method'));
 
-// 서버 측 유효성 검사를 위한 모듈
-const { campgroundSchema } = require('./schemas');
+// 서버 측 유효성 검사를 위한 joi 객체
+const { campgroundSchema, reviewSchema } = require('./schemas');
 
-// joi 모듈을 이용한 요청 페이로드 유효성 검증
+// joi 모듈을 이용한 요청 페이로드 유효성 검증 미들웨어(새 캠핑장 추가)
 // - put, post요청 시 클라이언트 측에서 1차로 유효성 검증을 하지만 postman으로 페이로드에 필요한 일부 데이터를 누락시켜서 요청을 해도 그대로 동작을 하게된다.
 //   따라서 joi 모듈로 작성한 스키마로 2차로 서버 측에서 유효성 검사를 해준다.
 const validateCampground = (req, res, next) => {
     // 요청 body 데이터가 스키마에 맞는지 체크
     // 정의한 스키마 유효성 검사에 통과하면 error에는 undefined가 할당되고
-    // 통과하지 못하면 에러 정보가 담긴 객체가 할당 됨
+    // 통과하지 못하면 에러 정보가 담긴 ValidationError 객체가 할당 됨
     // joi 모듈 - https://joi.dev/api/?v=17.6.0#introduction
     const { error } = campgroundSchema.validate(req.body);
     if (error) {
@@ -55,9 +56,20 @@ const validateCampground = (req, res, next) => {
     }
 };
 
+// 리뷰 유효성 검사 미들웨어
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
+
 // 이하 기본적인 라우팅(CRUD)
 app.get('/', (req, res) => {
-    res.render('home');
+    res.send('홈 페이지');
 });
 app.get('/campgrounds', catchAsyncError(async (req, res, next) => {
     const campgrounds = await Campground.find({});
@@ -73,6 +85,17 @@ app.post('/campgrounds', validateCampground, catchAsyncError(async (req, res, ne
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
 }));
+
+
+// 리뷰 추가
+app.post('/campgrounds/:id/review', validateReview, catchAsyncError(async (req, res) => {
+    const campground = await Campground.findById(req.params.id);
+    const review = new Review(req.body.review);
+    campground.review.push(review);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`)
+}));
+
 
 app.get('/campgrounds/:id', catchAsyncError(async (req, res, next) => {
     const campground = await Campground.findById(req.params.id);
