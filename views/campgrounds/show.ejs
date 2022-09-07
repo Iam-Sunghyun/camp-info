@@ -20,5 +20,18 @@
       </div>
       <div class="card-footer text-muted">2 days ago</div>
     </div>
+    <form action="/campgrounds/<%=campground._id%>/review" class="mb-3" method="POST">
+      <div class="mb-3">
+        <div>
+          <label class="form-label" for="rating">평점</label>
+          <input type="range" class="form-range" name="review[rating]" id="rating" min="1" max="5"></input>
+        </div>
+        <div>
+          <label class="form-label" for="body">후기</label>
+          <textarea class="form-control" name="review[body]" id="body" cols="30" rows="5"></textarea>   
+        </div>
+      </div>
+      <button class="btn btn-primary">후기 등록</button>
+    </form>
   </div>
 </div>
