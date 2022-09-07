@@ -1,3 +1,4 @@
+<!-- ejs-mate layout(템플릿을 위한 템플릿) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -19,14 +20,14 @@
     <%- include('../partials/navbar'); %>
 
     <main class="container mt-3">
-      <!-- 아래 위치에 layout()으로 전달된 html이 들어가게 됨(ejs-mate). -->
+      <!-- 아래 위치에 layout()으로 전달된 템플릿이 들어가게 됨(ejs-mate). -->
       <%- body -%>
     </main>
 
     <!-- footer -->
     <%- include('../partials/footer'); %>
 
-    <!-- bootstrap CDN link -->
+    <!-- bootstrap js CDN link -->
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
       integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
