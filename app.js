@@ -71,6 +71,7 @@ const validateReview = (req, res, next) => {
 app.get('/', (req, res) => {
     res.send('홈 페이지');
 });
+
 app.get('/campgrounds', catchAsyncError(async (req, res, next) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds });
@@ -92,10 +93,31 @@ app.post('/campgrounds/:id/review', validateReview, catchAsyncError(async (req, 
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
     campground.review.push(review);
-    await Promise.all([review.save(), campground.save()]);
+    await Promise.all([review.save(), campground.save()]);  
     res.redirect(`/campgrounds/${campground._id}`)
 }));
 
+// 리뷰 삭제
+app.delete('/campgrounds/:campId/review/:reviewId', catchAsyncError(async (req, res, next) => {
+    const { reviewId, campId } = req.params;
+    const campground = await Campground.findById(campId);
+    // const review = campground['review'].indexOf(req.params.reviewId);
+    // campground['review'].splice(review, 1);
+
+    // $pull 연산자 -> 조건에 맞는 배열 필드의 요소를 모두 제거함.
+    await Promise.all([ Campground.updateOne(campground, { $pull: { review: reviewId } }),
+                        Review.findByIdAndDelete(reviewId),
+                        campground.save()
+                        ]);
+    res.redirect(`/campgrounds/${campground._id}`)
+}));
+
+// 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
+app.delete('/campgrounds/:id', catchAsyncError(async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect('/campgrounds');
+}));
 
 
 app.get('/campgrounds/:id', catchAsyncError(async (req, res, next) => {
