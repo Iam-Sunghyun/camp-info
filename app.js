@@ -142,10 +142,13 @@ app.delete('/campgrounds/:id', catchAsyncError(async (req, res) => {
     res.redirect('/campgrounds');
 }));
 
-// 잘못된 경로 요청 처리용 라우터
-app.all('*', (req, res, next) => {
+// 404 처리용 미들웨어
+app.use((req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
 });
+// app.all('*', (req, res, next) => {
+//     next(new ExpressError('Page Not Found', 404));
+// });
 
 // 에러 처리 미들웨어
 app.use((err, req, res, next) => {
@@ -158,3 +161,4 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
     console.log('Server listening on port 3000...');
 });
+
