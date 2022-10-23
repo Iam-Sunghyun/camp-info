@@ -4,11 +4,7 @@ const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
 
-mongoose.connect('mongodb://localhost:27017/CampInfo', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true
-}).then(() => {
+mongoose.connect('mongodb://localhost:27017/CampInfo').then(() => {
     console.log("MongoDB 연결 완료");
 }).catch(err => {
     console.log("MongoDB 연결 실패");
@@ -26,7 +22,7 @@ const seedDB = async () => {
         const camp = new Campground({
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: 'https://unsplash.com/collections/483251/in-the-woods',
+            image: 'photo-1504851149312-7a075b496cc7.avif',
             price,
             description: 'Test text'
         });
