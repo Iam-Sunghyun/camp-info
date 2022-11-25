@@ -11,7 +11,7 @@ const CampgroundSchema = new mongoose.Schema({
     review: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
 });
 
-// findOneAndDelete은 findByIdAndDelete 쿼리 함수를 트리거한다.
+// findByIdAndDelete은 findOneAndDelete 함수를 트리거한다. -> findByIdAndDelete() 호출 시 아래 미들웨어 실행됨.
 // 캠핑장 삭제 시, 달려있던 리뷰도 모두 삭제하는 미들웨어
 CampgroundSchema.post('findOneAndDelete', async (docs, next) => {
   if (docs) {
