@@ -5,7 +5,7 @@ const engine = require('ejs-mate'); // ejs 템플릿 엔진을 위한 Express.4.
 const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const campgrounds = require('./routes/campgrounds');
-const campgroundsReview = require('./routes/campgroundsReview');
+const campgroundsReview = require('./routes/review');
 const app = express();
 
 // MongoDB 연결
@@ -17,14 +17,15 @@ mongoose.connect('mongodb://localhost:27017/CampInfo')
         console.log(err);
     });
 
-// 기본 템플릿 엔진, 템플릿 디렉토리 설정
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); // 기본 템플릿 엔진, 템플릿 디렉토리 설정
 app.set('views', path.join(__dirname, 'views'));
 
-// ejs 템플릿 파싱에 ejs 기본 엔진이 아닌 ejs-mate를 사용하라고 설정하는 것(ejs 파일을 실행하거나 파싱할 때 사용되는 엔진은 여러 가지가 있다.).
-app.engine('ejs', engine);
+app.engine('ejs', engine); // ejs 템플릿 파싱에 ejs 기본 엔진이 아닌 ejs-mate를 사용하라고 설정하는 것(ejs 파일을 실행하거나 파싱할 때 사용되는 엔진은 여러 가지가 있다.).
 
 app.use(express.urlencoded({ extended: true })); // 요청 페이로드 파싱 설정
+
+app.use(express.static(path.join(__dirname, 'public'))); // 템플릿에서 사용할 정적 파일(이미지, 동영상, js파일 등) 디렉토리 설정)
+
 app.use(methodOverride('_method')); // method-override 모듈 쿼리 스트링 설정
 
 // 홈페이지
@@ -33,7 +34,9 @@ app.get('/', (req, res) => {
 });
 
 // 캠핑장 라우터
-app.use('/campgrounds', campgrounds);
+app.use('/campgrounds', campgrounds); 
+
+// 리뷰 라우터
 app.use('/campgrounds/:id/reviews', campgroundsReview );
 
 

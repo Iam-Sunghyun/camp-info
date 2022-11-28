@@ -8,7 +8,7 @@ const CampgroundSchema = new mongoose.Schema({
     price: Number,
     description: String,
     location: String,
-    review: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
+    review: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }] // ref: -> Populate 시 참조할 모델(컬렉션) 명(대문자 단수형)
 });
 
 // findByIdAndDelete은 findOneAndDelete 함수를 트리거한다. -> findByIdAndDelete() 호출 시 아래 미들웨어 실행됨.

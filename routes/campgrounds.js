@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campground');
+const ExpressError = require('../utils/ExpressError');
 
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
