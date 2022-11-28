@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true }); // 중요※ 상위 라우터의 경로 매개변수(req.params) 값을 병합시킴. -> app.js의 라우터의 경로 매개변수를 사용할 수 있게 된다.
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 
@@ -25,7 +25,6 @@ router.post('/', validateReview, catchAsyncError(async (req, res) => {
   const campground = await Campground.findById(req.params.id);
   const review = new Review(req.body.review);
   campground.review.push(review);
-  console.log(review, campground)
   await Promise.all([review.save(), campground.save()]);  
   res.redirect(`/campgrounds/${campground._id}`)
 }));
