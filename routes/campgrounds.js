@@ -32,6 +32,11 @@ const validateCampground = (req, res, next) => {
   }
 };
 
+router.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  next();
+})
+
 // 캠핑장 페이지
 router.get('/', catchAsyncError(async (req, res, next) => {
   const campgrounds = await Campground.find({});
@@ -47,7 +52,8 @@ router.get('/new', (req, res) => {
 router.post('/', validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
   await campground.save();
-  res.redirect(`/${campground._id}`);
+  req.flash('success', 'new camp added!!!')
+  res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)

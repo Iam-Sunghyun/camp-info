@@ -20,6 +20,7 @@
     <%- include('../partials/navbar'); %>
 
     <main class="container mt-3">
+      <% if (!typeof(success) === 'undefined'){ %> <h1><%= success %></h1> <% } %>
       <!-- 아래 위치에 layout()으로 전달된 템플릿이 들어가게 됨(ejs-mate). -->
       <%- body -%>
     </main>
