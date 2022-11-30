@@ -20,6 +20,10 @@
     <%- include('../partials/navbar'); %>
 
     <main class="container mt-3">
+      <!-- ↓ res.render('registration', {success: false}); 혹은
+        <% if(locals.success) %>처럼 체크하는 방법도 있다. success에 값이 없는 상태에서  
+         if(success) 처럼 해버리면 터미널에 경고메시지가 계속 뜬다..
+      -->
       <% if (!typeof(success) === 'undefined'){ %> <h1><%= success %></h1> <% } %>
       <!-- 아래 위치에 layout()으로 전달된 템플릿이 들어가게 됨(ejs-mate). -->
       <%- body -%>
