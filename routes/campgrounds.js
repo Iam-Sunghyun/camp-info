@@ -34,6 +34,7 @@ const validateCampground = (req, res, next) => {
 
 router.use((req, res, next) => {
   res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
   next();
 })
 
@@ -52,31 +53,45 @@ router.get('/new', (req, res) => {
 router.post('/', validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
   await campground.save();
-  req.flash('success', 'new camp added!!!')
+  req.flash('success', 'new camp added!!!');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
 router.delete('/:id', catchAsyncError(async (req, res) => {
   await Campground.findByIdAndDelete(req.params.id);
+  req.flash('success', 'campground successfully deleted');
   res.redirect('/campgrounds');
 }));
 
 // 특정 캠핑장 세부화면
 router.get('/:id', catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id).populate('review'); // Populate할 필드 지정
+  if (!campground) {
+    req.flash('error', 'not found page!');
+    return res.redirect('/campgrounds');
+  }
   res.render('campgrounds/show', { campground });
 }));
 
 // 특정 캠핑장 내용 수정 페이지
 router.get('/:id/edit', catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
+  if (!campground) {
+    req.flash('error', 'not found page!');
+    return res.redirect('/campgrounds');
+  }
   res.render('campgrounds/edit', { campground });
 }));
 
 // 특정 캠핑장 내용 수정
 router.put('/:id', validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
+  if (!campground) {
+    req.flash('error', 'not found page!');
+    return res.redirect('/campgrounds');
+  }
+  req.flash('success', 'campground successfully updated!');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 

@@ -26,7 +26,8 @@ router.post('/', validateReview, catchAsyncError(async (req, res) => {
   const review = new Review(req.body.review);
   campground.review.push(review);
   await Promise.all([review.save(), campground.save()]);  
-  res.redirect(`/campgrounds/${campground._id}`)
+  req.flash('success', 'review successfully added');
+  res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 // 리뷰 삭제
@@ -38,8 +39,9 @@ router.delete('/:reviewId', catchAsyncError(async (req, res, next) => {
   await Promise.all([ Campground.updateOne(campground, { $pull: { review: reviewId } }),
                       Review.findByIdAndDelete(reviewId),
                       campground.save()
-                      ]);
-  res.redirect(`/campgrounds/${campground._id}`)
+                    ]);
+  req.flash('success', 'review successfully deleted');
+  res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 module.exports = router;
