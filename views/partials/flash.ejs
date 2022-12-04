@@ -6,7 +6,7 @@
 
 <!-- req.locals.success 값이 있는지 확인하는 것 -->
 <!-- if (success && success.length)-->
-<% if (success && success.length){ %> 
+<% if (typeof(success) !== 'undefined' && success.length){ %> 
 <div class="alert alert-success alert-dismissible fade show" role="alert"> <!-- role="alert" 는 접근성을 위한 것 ex) 스크린 리더 사용자(정확한 기능이 뭐지?)-->
   <strong><%= success %></strong>
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -14,7 +14,7 @@
 <% } %>
 
 <!-- 에러메시지 -->
-<% if (error && error.length){ %> 
+<% if (typeof(error) !== 'undefined' && error.length){ %> 
   <div class="alert alert-danger alert-dismissible fade show" role="alert"> <!-- role="alert" 는 접근성을 위한 것 ex) 스크린 리더 사용자(정확한 기능이 뭐지?)-->
     <strong><%= error %></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
