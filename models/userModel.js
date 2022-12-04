@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
 
 // passport-local-mongoose
 // 스키마에 username, hash, salt 값이 passport-local-mongoose에 의해 자동으로 추가 됨.
-// username이 중복 값인지 자동으로 체크한다고 함
+// 또한 db에 사용자를 저장하는 register()같은 여러 인스턴스/정적 메서드도 도큐먼트/모델에 추가된다.
+// (참고로 register()로 사용자 계정 등록 시 username이 중복 값인지 자동으로 체크한다고 함)
 userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', userSchema);

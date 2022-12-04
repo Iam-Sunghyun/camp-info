@@ -1,6 +1,6 @@
 // Mongoose 모델 파일
 const mongoose = require('mongoose');
-const Review = require('./review');
+const Review = require('./reviewModel');
 
 const CampgroundSchema = new mongoose.Schema({
     title: String,
