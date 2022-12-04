@@ -6,8 +6,11 @@ const methodOverride = require('method-override');
 const ExpressError = require('./utils/ExpressError');
 const session = require('express-session');
 const flash = require('connect-flash');
-const campgrounds = require('./routes/campgrounds');
-const campgroundsReview = require('./routes/review');
+const passport = require('passport');
+// const LocalStrategy = require('passport-local');
+const campgroundRouter = require('./routes/campgroundRouter');
+const reviewRouter = require('./routes/reviewRouter');
+const userRouter = require('./routes/authRouter');
 const app = express();
 
 // MongoDB 연결
@@ -18,6 +21,30 @@ mongoose.connect('mongodb://localhost:27017/CampInfo')
         console.log("MongoDB 연결 실패");
         console.log(err);
     });
+
+// passport-local-mongoose 구성--------------------------
+/**
+const strategy = new LocalStrategy(
+(username, password, done) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) return done(err); 
+      if (!user) return done(null, false);
+      if (!user.verifyPassword(password)) return done(null, false);
+      return done(null, user);
+    });
+  }
+);
+passport.use(strategy);
+*/
+const User = require('./models/userModel');
+// passport-local-mongoose 0.2.1이상 버전의 createStrategy() 메서드는 strategy 객체( 올바른 옵션의 passport-local 객체 -> new LocalStrategy(verify function))의 역할을 한다.
+passport.use(User.createStrategy());
+
+// use static serialize and deserialize of model for passport session support
+passport.serializeUser(User.serializeUser()); 
+passport.deserializeUser(User.deserializeUser()); 
+//---------------------------------------------
+
 
 app.set('view engine', 'ejs'); // 기본 템플릿 엔진, 템플릿 디렉토리 설정
 app.set('views', path.join(__dirname, 'views'));
@@ -47,11 +74,17 @@ app.get('/', (req, res) => {
     res.send('홈 페이지');
 });
 
+
+
 // 캠핑장 라우터
-app.use('/campgrounds', campgrounds); 
+app.use('/campgrounds', campgroundRouter); 
 
 // 리뷰 라우터
-app.use('/campgrounds/:id/reviews', campgroundsReview );
+app.use('/campgrounds/:id/reviews', reviewRouter);
+
+// 회원가입 / 로그인
+app.use('/users', userRouter);
+
 
 
 // 404 처리용 미들웨어
