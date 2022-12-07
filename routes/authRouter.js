@@ -28,11 +28,11 @@ router.get('/signup', (req, res) => {
 });
 
 // POST 회원가입
-router.post('/signup', catchAsyncError(async (req, res) => {
+router.post('/signup', async (req, res) => {
   // passport-local-mongoose 모델 static 메서드
   await User.register(new User({ username: req.body.username }, req.body.password));
   res.redirect('/users/login');
-}));
+});
 
 // GET 로그인 페이지
 router.get('/login', (req, res) => {
