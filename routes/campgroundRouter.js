@@ -32,11 +32,6 @@ const validateCampground = (req, res, next) => {
   }
 };
 
-router.use((req, res, next) => {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
-  next();
-})
 
 // 캠핑장 페이지
 router.get('/', catchAsyncError(async (req, res, next) => {

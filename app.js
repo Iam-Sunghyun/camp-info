@@ -69,6 +69,12 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error'); 
+    next();
+})
+  
 // 홈페이지
 app.get('/', (req, res) => {
     res.send('홈 페이지');
@@ -101,6 +107,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!';
+    console.log(err.stack)
     res.status(statusCode).render('error', { err });
 });
 
