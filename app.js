@@ -41,6 +41,7 @@ const User = require('./models/userModel');
 passport.use(User.createStrategy());
 
 // use static serialize and deserialize of model for passport session support
+// 세션에 데이터를 어떻게 저장하고 가져오는지 결정하는 메서드.
 passport.serializeUser(User.serializeUser()); 
 passport.deserializeUser(User.deserializeUser()); 
 //---------------------------------------------
@@ -108,7 +109,7 @@ app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!';
     console.log(err.stack)
-    res.status(statusCode).render('error', { err });
+    res.status(statusCode).render('error', { err, statusCode });
 });
 
 app.listen(3000, () => {
