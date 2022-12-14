@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campgroundModel');
 const ExpressError = require('../utils/ExpressError');
+const isLoggedIn = require('../middleware');
 
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
@@ -40,12 +41,12 @@ router.get('/', catchAsyncError(async (req, res, next) => {
 }));
 
 // 새 캠핑장 추가 페이지
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
   res.render('campgrounds/new');
 });
 
 // 새 캠핑장 추가
-router.post('/', validateCampground, catchAsyncError(async (req, res, next) => {
+router.post('/', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
   await campground.save();
   req.flash('success', 'new camp added!!!');
@@ -53,7 +54,7 @@ router.post('/', validateCampground, catchAsyncError(async (req, res, next) => {
 }));
 
 // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
-router.delete('/:id', catchAsyncError(async (req, res) => {
+router.delete('/:id', isLoggedIn, catchAsyncError(async (req, res) => {
   await Campground.findByIdAndDelete(req.params.id);
   req.flash('success', 'campground successfully deleted');
   res.redirect('/campgrounds');
@@ -70,7 +71,7 @@ router.get('/:id', catchAsyncError(async (req, res, next) => {
 }));
 
 // 특정 캠핑장 내용 수정 페이지
-router.get('/:id/edit', catchAsyncError(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
   if (!campground) {
     req.flash('error', 'not found page!');
@@ -80,7 +81,7 @@ router.get('/:id/edit', catchAsyncError(async (req, res, next) => {
 }));
 
 // 특정 캠핑장 내용 수정
-router.put('/:id', validateCampground, catchAsyncError(async (req, res, next) => {
+router.put('/:id', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
   if (!campground) {
     req.flash('error', 'not found page!');
