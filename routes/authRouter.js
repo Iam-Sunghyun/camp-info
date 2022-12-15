@@ -4,6 +4,7 @@ const passport = require('passport')
 // const catchAsyncError = require('../utils/catchAsyncError');
 const User = require('../models/userModel');
 
+
 // GET 회원가입 페이지
 router.get('/signup', (req, res) => {
   res.render('auth/signup');
@@ -43,6 +44,14 @@ router.post('/login',
     res.redirect('/campgrounds');
   }
 );
+
+router.post('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    req.flash('success', '로그아웃 되었습니다.');
+    res.redirect('/campgrounds');
+  });
+})
 
 // 아이디 중복확인 라우터 하나 해야될듯
 

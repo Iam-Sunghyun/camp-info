@@ -22,7 +22,7 @@ mongoose.connect('mongodb://localhost:27017/CampInfo')
         console.log(err);
     });
 
-// passport-local-mongoose 구성--------------------------
+// passport-local-mongoose 설정--------------------------
 /**
 const strategy = new LocalStrategy(
 (username, password, done) => {
@@ -44,6 +44,7 @@ passport.use(User.createStrategy());
 // 세션에 데이터를 어떻게 저장하고 가져오는지 결정하는 메서드.
 passport.serializeUser(User.serializeUser()); 
 passport.deserializeUser(User.deserializeUser()); 
+
 //---------------------------------------------
 
 
@@ -67,7 +68,14 @@ const sessionConfig = {
         secure: false
     }
 }
-app.use(session(sessionConfig));
+
+app.use(session(sessionConfig)); // 세션 사용을 위한 express-session 로드
+
+//※중요※ passport 기본 설정 (express-session 설정) 다음에 위치해야됨
+// 이걸 빠트려서 req.isAuthenticated(), req.logout() 함수 참조가 안됐던 것..
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(flash());
 
 app.use((req, res, next) => {
