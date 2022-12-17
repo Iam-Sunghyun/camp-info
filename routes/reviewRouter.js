@@ -28,7 +28,7 @@ router.post('/', isLoggedIn, validateReview, catchAsyncError(async (req, res) =>
   const review = new Review(req.body.review);
   campground.review.push(review);
   await Promise.all([review.save(), campground.save()]);  
-  req.flash('success', 'review successfully added');
+  req.flash('success', '리뷰가 성공적으로 등록되었습니다.');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 
@@ -42,7 +42,7 @@ router.delete('/:reviewId', isLoggedIn, catchAsyncError(async (req, res, next) =
                       Review.findByIdAndDelete(reviewId),
                       campground.save()
                     ]);
-  req.flash('success', 'review successfully deleted');
+  req.flash('success', '리뷰가 성공적으로 삭제되었습니다.');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 

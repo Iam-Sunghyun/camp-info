@@ -38,14 +38,15 @@ router.post('/login',
   // https://github.com/jaredhanson/passport  /blob/master/lib/middleware/authenticate.js 124번줄 참조
   // 그렇다면 req.flash는 connect-flash를 로드해야 사용 가능했는데, connect-flash와 passport의 관계는..?
   // => express 3.x에서 req.flash()가 제거됨. 따라서 3.x 이후 버전에선 connect-flash 모듈을 사용해줘야 플래시 메시지 옵션을 사용할 수 있다.
-  passport.authenticate('local', { failureRedirect: '/users/login', failureFlash: true }),
+  passport.authenticate('local', { failureRedirect: '/users/login', failureFlash: '아이디 혹은 비밀번호가 다릅니다.' }),
   (req, res) => {
     req.flash('success', `${req.body.username}님 환영합니다!`);
     res.redirect('/campgrounds');
   }
 );
 
-router.post('/logout', (req, res) => {
+// 로그아웃
+router.get('/logout', (req, res) => {
   req.logout((err) => {
     if (err) return next(err);
     req.flash('success', '로그아웃 되었습니다.');

@@ -49,14 +49,14 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.post('/', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
   await campground.save();
-  req.flash('success', 'new camp added!!!');
+  req.flash('success', '새 캠핑장이 추가되었습니다.');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
 router.delete('/:id', isLoggedIn, catchAsyncError(async (req, res) => {
   await Campground.findByIdAndDelete(req.params.id);
-  req.flash('success', 'campground successfully deleted');
+  req.flash('success', '캠핑장이 삭제되었습니다.');
   res.redirect('/campgrounds');
 }));
 
@@ -87,7 +87,7 @@ router.put('/:id', isLoggedIn, validateCampground, catchAsyncError(async (req, r
     req.flash('error', 'not found page!');
     return res.redirect('/campgrounds');
   }
-  req.flash('success', 'campground successfully updated!');
+  req.flash('success', '캠핑장 업데이트 완료!');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
 
