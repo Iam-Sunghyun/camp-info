@@ -8,6 +8,7 @@ const CampgroundSchema = new mongoose.Schema({
     price: Number,
     description: String,
     location: String,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     review: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }] // ref: -> Populate 시 참조할 모델(컬렉션) 명(대문자 단수형)
 });
 

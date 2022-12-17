@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
-const Campground = require('../models/campground');
+const Campground = require('../models/campgroundModel');
 
 mongoose.connect('mongodb://localhost:27017/CampInfo').then(() => {
     console.log("MongoDB 연결 완료");
@@ -22,6 +22,7 @@ const seedDB = async () => {
         const camp = new Campground({
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
+            author: '6391dffd8a918d7d291e8007',
             image: 'photo-1504851149312-7a075b496cc7.avif',
             price,
             description: 'Test text'
