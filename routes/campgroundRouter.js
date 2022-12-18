@@ -3,6 +3,7 @@ const router = express.Router();
 const Campground = require('../models/campgroundModel');
 const ExpressError = require('../utils/ExpressError');
 const isLoggedIn = require('../middleware');
+const mongoose = require('mongoose');
 
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
@@ -46,11 +47,13 @@ router.get('/new', isLoggedIn, (req, res) => {
 });
 
 // 새 캠핑장 추가
-router.post('/', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
+router.post('/:id', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
-  await campground.save();
+  // ↓ 게시물을 작성한 사용자 _id를 문자열에서 모델 스키마에 설정한 자료형으로(ObjectId)로 변환 후 저장. 경로 매개변수에 저장된 상태는 문자열임. 그대로 삽입하면 "BSONTypeError" 발생함
+  campground['author'] = mongoose.Types.ObjectId(req.params.id.trim()); 
+  await campground.save();  
   req.flash('success', '새 캠핑장이 추가되었습니다.');
-  res.redirect(`/campgrounds/${campground._id}`);
+  res.redirect(`/campgrounds`);
 }));
 
 // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
@@ -62,7 +65,7 @@ router.delete('/:id', isLoggedIn, catchAsyncError(async (req, res) => {
 
 // 특정 캠핑장 세부화면
 router.get('/:id', catchAsyncError(async (req, res, next) => {
-  const campground = await Campground.findById(req.params.id).populate('review'); // Populate할 필드 지정
+  const campground = await Campground.findById(req.params.id).populate('review').populate('author'); // Populate할 필드 지정
   if (!campground) {
     req.flash('error', 'not found page!');
     return res.redirect('/campgrounds');
