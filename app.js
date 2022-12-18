@@ -115,10 +115,10 @@ app.use((req, res, next) => {
 
 // 에러 처리 미들웨어
 app.use((err, req, res, next) => {
-    const { statusCode = 500 } = err;
+    const { status = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!';
     console.log(err.stack)
-    res.status(statusCode).render('error', { err, statusCode });
+    res.status(status).render('error', { err, status });
 });
 
 app.listen(3000, () => {
