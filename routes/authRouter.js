@@ -44,8 +44,10 @@ router.post('/login',
   // => express 3.x에서 req.flash()가 제거됨. 따라서 3.x 이후 버전에선 connect-flash 모듈을 사용해줘야 플래시 메시지 옵션을 사용할 수 있다.
   passport.authenticate('local', { failureRedirect: '/users/login', failureFlash: '아이디 혹은 비밀번호가 다릅니다.' }),
   (req, res) => {
+    const redirectUrl = req.session.returnTo || '/campgrounds';
+    delete req.session.returnTo;
     req.flash('success', `${req.body.username}님 환영합니다!`);
-    res.redirect('/campgrounds');
+    res.redirect(redirectUrl);
   }
 );
 
