@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campgroundModel');
 const ExpressError = require('../utils/ExpressError');
-const isLoggedIn = require('../middleware');
-const mongoose = require('mongoose');
+const { isLoggedIn, isAuthor } = require('../middleware');
+
 
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
@@ -34,7 +34,6 @@ const validateCampground = (req, res, next) => {
   }
 };
 
-
 // 캠핑장 페이지
 router.get('/', catchAsyncError(async (req, res, next) => {
   const campgrounds = await Campground.find({});
@@ -47,17 +46,16 @@ router.get('/new', isLoggedIn, (req, res) => {
 });
 
 // 새 캠핑장 추가
-router.post('/:id', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
+router.post('/', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = new Campground(req.body.campground);
-  // ↓ 게시물을 작성한 사용자 _id를 문자열에서 모델 스키마에 설정한 자료형으로(ObjectId)로 변환 후 저장. 경로 매개변수에 저장된 상태는 문자열임. 그대로 삽입하면 "BSONTypeError" 발생함
-  campground['author'] = mongoose.Types.ObjectId(req.params.id.trim()); 
+  campground.author = req.user._id; // 게시물에 작성자(현재 로그인 사용자) 정보 저장
   await campground.save();  
   req.flash('success', '새 캠핑장이 추가되었습니다.');
   res.redirect(`/campgrounds`);
 }));
 
 // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
-router.delete('/:id', isLoggedIn, catchAsyncError(async (req, res) => {
+router.delete('/:id', isLoggedIn, isAuthor, catchAsyncError(async (req, res) => {
   await Campground.findByIdAndDelete(req.params.id);
   req.flash('success', '캠핑장이 삭제되었습니다.');
   res.redirect('/campgrounds');
@@ -74,7 +72,7 @@ router.get('/:id', catchAsyncError(async (req, res, next) => {
 }));
 
 // 특정 캠핑장 내용 수정 페이지
-router.get('/:id/edit', isLoggedIn, catchAsyncError(async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findById(req.params.id);
   if (!campground) {
     req.flash('error', 'not found page!');
@@ -84,12 +82,8 @@ router.get('/:id/edit', isLoggedIn, catchAsyncError(async (req, res, next) => {
 }));
 
 // 특정 캠핑장 내용 수정
-router.put('/:id', isLoggedIn, validateCampground, catchAsyncError(async (req, res, next) => {
+router.put('/:id', isLoggedIn, isAuthor, validateCampground, catchAsyncError(async (req, res, next) => {
   const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
-  if (!campground) {
-    req.flash('error', 'not found page!');
-    return res.redirect('/campgrounds');
-  }
   req.flash('success', '캠핑장 업데이트 완료!');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
