@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport')
 // const catchAsyncError = require('../utils/catchAsyncError');
 const User = require('../models/userModel');
+const ExpressError = require('../utils/ExpressError');
 
 
 // GET 회원가입 페이지
@@ -31,7 +32,10 @@ router.post('/signup', async (req, res) => {
 });
 
 // GET 로그인 페이지
-router.get('/login', (req, res) => {
+router.get('/login', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next(new ExpressError('이미 로그인중 입니다.', 400));
+  }
   res.render('auth/login');
 });
 
@@ -42,7 +46,11 @@ router.post('/login',
   // https://github.com/jaredhanson/passport  /blob/master/lib/middleware/authenticate.js 124번줄 참조
   // 그렇다면 req.flash는 connect-flash를 로드해야 사용 가능했는데, connect-flash와 passport의 관계는..?
   // => express 3.x에서 req.flash()가 제거됨. 따라서 3.x 이후 버전에선 connect-flash 모듈을 사용해줘야 플래시 메시지 옵션을 사용할 수 있다.
-  passport.authenticate('local', { failureRedirect: '/users/login', failureFlash: '아이디 혹은 비밀번호가 다릅니다.' }),
+  passport.authenticate('local', {
+    failureRedirect: '/users/login',
+    failureFlash: '아이디 혹은 비밀번호가 다릅니다.',
+    keepSessionInfo : true // ※ 이 옵션 기본 값이 false여서 req.session.returnTo가 리셋 됨. 그래서 원래 페이지로 redirect가 안됐던 것.
+  }),
   (req, res) => {
     const redirectUrl = req.session.returnTo || '/campgrounds';
     delete req.session.returnTo;

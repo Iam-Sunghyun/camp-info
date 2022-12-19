@@ -3,7 +3,7 @@ const router = express.Router({ mergeParams: true }); // 중요※ 상위 라우
 const Campground = require('../models/campgroundModel');
 const Review = require('../models/reviewModel');
 const ExpressError = require('../utils/ExpressError');
-const isLoggedIn = require('../middleware');
+const { isLoggedIn } = require('../middleware');
 
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
