@@ -12,8 +12,8 @@
           <li class="list-group-item text-muted"><%= campground.location%></li>
           <li class="list-group-item">$<%= campground.price%>/night</li>
         </ul>
-        <!-- 게시물 작성자 권한부여 -->
-        <% if(currentUser && campground.author.equals(currentUser._id)) { %> 
+        <!-- 게시물 수정/삭제 (게시물 작성자만 보이는 부분) -->
+        <% if(currentUser && campground.author.equals(currentUser)) { %> 
         <div class="card-body">
           <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">수정</a>
           <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
@@ -26,8 +26,9 @@
   </div>
 
   <div class="col-6 mt-3">
-    <!-- 리뷰 작성 -->
+    <!-- 리뷰 작성 (로그인 유저만 보이는 부분) -->
     <!-- 사용자 정의 피드백 메시지를 사용하기 위한 novalidate 속성 설정 -->
+    <% if(currentUser) { %> 
     <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 needs-validation" method="POST" novalidate>
       <div class="mb-3">
         <div>
@@ -43,18 +44,23 @@
       </div>
       <button class="btn btn-primary">리뷰 등록</button>
     </form>
-    <!-- 리뷰-->
+    <% } %> 
+    <!-- 리뷰 -->
     <% for (const review of campground.review) { %>
       <div>
         <div class="card mt-1 mb-3">
             <div class="card-body">
               <h5 class="card-title">평점 <%=review.rating%> </h5>
+              <p><%= review.author.username %>님이 작성</p>
               <!-- <h6 class="card-subtitle mb-2 text-muted">id</h6> -->
               <p class="card-text"><%=review.body%></p>
+              <!-- 리뷰 삭제 (리뷰 작성자만 보이는 부분) -->
+              <% if(currentUser && review.author.equals(currentUser)) { %> 
               <form action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
-                <button class="btn btn-primary mt-3">삭제</button>
+                <button class="btn btn-danger mt-3">삭제</button>
               </form>
-            </div>
+              <% } %> 
+            </div> 
         </div>
       </div>
     <% } %>

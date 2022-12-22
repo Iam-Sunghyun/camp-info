@@ -37,7 +37,10 @@ router.delete('/:id', isLoggedIn, isAuthor, catchAsyncError(async (req, res) => 
 
 // 특정 캠핑장 세부화면
 router.get('/:id', catchAsyncError(async (req, res, next) => {
-  const campground = await Campground.findById(req.params.id).populate('review').populate('author'); // Populate할 필드 지정
+  const campground = await Campground.findById(req.params.id).populate({ // 중첩 Populating
+    path: 'review',
+    populate: 'author' 
+  }).populate('author'); // Populate할 필드 지정
   if (!campground) {
     req.flash('error', 'not found page!');
     return res.redirect('/campgrounds');
@@ -57,7 +60,7 @@ router.get('/:id/edit', isLoggedIn, isAuthor, catchAsyncError(async (req, res, n
 
 // 특정 캠핑장 내용 수정
 router.put('/:id', isLoggedIn, isAuthor, validateCampground, catchAsyncError(async (req, res, next) => {
-  const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
+  const campground = await Campground.findByIdAndUpdate(req.params.id, req.body.campground);
   req.flash('success', '캠핑장 업데이트 완료!');
   res.redirect(`/campgrounds/${campground._id}`);
 }));
