@@ -7,6 +7,9 @@ const { isLoggedIn, validateReview, isReviewAuthor } = require('../middleware');
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
 
+router.get('/', (req, res) => {
+  res.redirect(`/campgrounds/${req.params.id}`);
+})
 
 // 리뷰 추가
 router.post('/', isLoggedIn, validateReview, catchAsyncError(async (req, res) => {
@@ -22,15 +25,13 @@ router.post('/', isLoggedIn, validateReview, catchAsyncError(async (req, res) =>
 // 리뷰 삭제
 router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsyncError(async (req, res, next) => {
   const { reviewId, id } = req.params;
-  const campground = await Campground.findById(id);
 
   // $pull 연산자 -> 조건에 맞는 배열 필드의 요소를 모두 제거함.
-  await Promise.all([ Campground.updateOne(campground, { $pull: { review: reviewId } }),
+  await Promise.all([ Campground.findByIdAndUpdate(id, { $pull: { review: reviewId } }),
                       Review.findByIdAndDelete(reviewId),
-                      campground.save()
                     ]);
   req.flash('success', '리뷰가 성공적으로 삭제되었습니다.');
-  res.redirect(`/campgrounds/${campground._id}`);
+  res.redirect(`/campgrounds/${id}`);
 }));
 
 module.exports = router;

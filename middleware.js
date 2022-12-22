@@ -1,5 +1,6 @@
 const ExpressError = require('./utils/ExpressError');
 const Campground = require('./models/campgroundModel');
+const Review = require('./models/reviewModel');
 const { campgroundSchema, reviewSchema } = require('./schemas'); // 서버 측 유효성 검사를 위한 joi 객체
 
 /**
@@ -50,7 +51,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 // 게시물 작성자와 현재 로그인 유저 확인 미들웨어(웹 페이지가 아닌 postman, ajax로 요청된 경우 사용자 확인을 위함)
 module.exports.isAuthor = async (req, res, next) => {
   const campground = await Campground.findById(req.params.id).populate('author');
-  if (req.user && !campground.author.equals(req.user)) {
+  if (!campground.author.equals(req.user)) {
     return next(new ExpressError('권한이 없습니다', 400));
   }
   next();
@@ -59,9 +60,10 @@ module.exports.isAuthor = async (req, res, next) => {
 // 리뷰 작성자 확인 미들웨어
 module.exports.isReviewAuthor = async (req, res, next) => {
   const { id, reviewId } = req.params;
-  const review = await Review.findById(reviewId);
-  if (!review.author.equals(req.user._id)) {
-    req.flash('error', 'You do not have permission to do that!');
+  const review = await Review.findById(reviewId).populate('author');
+  // ↓ ObjectId, 도큐먼트 객체 비교하는 방법 => https://futurestud.io/tutorials/mongodb-how-to-compare-objectids-in-node-js
+  if (!review.author.equals(req.user)) {
+    req.flash('error', '권한이 없습니다.');
     return res.redirect(`/campgrounds/${id}`);
   }
   next();
