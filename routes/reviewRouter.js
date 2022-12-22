@@ -7,10 +7,6 @@ const { isLoggedIn, validateReview, isReviewAuthor } = require('../middleware');
 // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
 const catchAsyncError = require('../utils/catchAsyncError');
 
-router.get('/', (req, res) => {
-  res.redirect(`/campgrounds/${req.params.id}`);
-})
-
 // 리뷰 추가
 router.post('/', isLoggedIn, validateReview, catchAsyncError(async (req, res) => {
   const campground = await Campground.findById(req.params.id);

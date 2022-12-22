@@ -52,7 +52,7 @@ router.post('/login',
     keepSessionInfo : true // ※ 이 옵션 기본 값이 false여서 req.session.returnTo가 리셋 됨. 그래서 원래 페이지로 redirect가 안됐던 것.
   }),
   (req, res) => {
-    const redirectUrl = req.session.returnTo || '/campgrounds';
+    const redirectUrl = (req.session.returnTo && req.method === 'GET') || '/campgrounds';
     delete req.session.returnTo;
     req.flash('success', `${req.body.username}님 환영합니다!`);
     res.redirect(redirectUrl);
