@@ -1,43 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport')
-// const catchAsyncError = require('../utils/catchAsyncError');
-const User = require('../models/userModel');
-const ExpressError = require('../utils/ExpressError');
-
+const user = require('../controllers/authControl');
 
 // GET 회원가입 페이지
-router.get('/signup', (req, res) => {
-  res.render('auth/signup');
-});
+router.get('/signup', user.renderSignup);
 
 // POST 회원가입
-router.post('/signup', async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    // email 값이 중복되면 mongodb에서 아래와 같은 error 발생시킨다
-    // MongoServerError: E11000 duplicate key error collection
-    const user = await User.register(new User({ username, email }), password);   // passport-local-mongoose 모델 static 메서드, username 중복 시 에러 발생시킨다
-    // passport 메서드로 로그인 세션 생성(회원가입 후 자동 로그인)
-    req.login(user, (err) => {
-      if (err) return next(err);
-      req.flash('success', '회원가입 성공!');
-      res.redirect('/campgrounds');
-    });
-  } catch (e) {
-    req.flash('error', '중복된 아이디입니다.');
-    console.log(e)
-    res.redirect('/users/signup');
-  }
-});
+router.post('/signup', user.signup);
 
 // GET 로그인 페이지
-router.get('/login', (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next(new ExpressError('이미 로그인중 입니다.', 400));
-  }
-  res.render('auth/login');
-});
+router.get('/login', user.login);
 
 // POST 로그인 
 router.post('/login',
@@ -50,23 +23,10 @@ router.post('/login',
     failureRedirect: '/users/login',
     failureFlash: '아이디 혹은 비밀번호가 다릅니다.',
     keepSessionInfo : true // ※ 이 옵션 기본 값이 false여서 req.session.returnTo가 리셋 됨. 그래서 원래 페이지로 redirect가 안됐던 것.
-  }),
-  (req, res) => {
-    const redirectUrl = (req.session.returnTo && req.method === 'GET') || '/campgrounds';
-    delete req.session.returnTo;
-    req.flash('success', `${req.body.username}님 환영합니다!`);
-    res.redirect(redirectUrl);
-  }
-);
+  }), user.successLogin);
 
 // 로그아웃
-router.get('/logout', (req, res) => {
-  req.logout((err) => {
-    if (err) return next(err);
-    req.flash('success', '로그아웃 되었습니다.');
-    res.redirect('/campgrounds');
-  });
-})
+router.get('/logout', user.logout);
 
 // 아이디 중복확인 라우터 하나 해야될듯
 
