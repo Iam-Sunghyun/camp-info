@@ -1,3 +1,13 @@
+// proccess.env.NODE_ENV는 환경 변수로 개발 환경인지, 프로덕션 환경인지를 식별하기 위함(지금은 개발 환경).
+// 개발 환경의 경우 require('dotenv').config()는 .env 파일에 정의한 변수를 가져와서 process.env에 할당 한다.
+// 프로덕션 환경의 경우 .env 파일이 아닌 프로덕션 환경 자체에 환경변수가 저장되어있을 것.
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
+console.log(process.env.CLOUDINARY_KEY);
+console.log(process.env.CLOUDINARY_SECRET);
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
