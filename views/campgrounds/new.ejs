@@ -5,7 +5,7 @@
     <!-- 부트스트랩 novalidate 속성은 브라우저 기본 validation 피드백이 아닌 자바스크립트로 사용자 정의 유효성 검사 피드백을 사용할 수 있게 해준다.-->
     <!-- 지정한 class 이름으로 폼 요소를 가져올 것 -->
     <!-- https://getbootstrap.com/docs/5.2/forms/validation/#custom-styles -->
-    <form action="/campgrounds" method="POST" class="needs-validation" novalidate>
+    <form action="/campgrounds" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
       <div class="mb-3">
         <label class="form-label" for="title">이름</label>
         <input class="form-control" type="text" id="title" name="campground[title]" required />
@@ -26,9 +26,12 @@
           <div class="invalid-feedback">유효하지 않은 가격입니다.</div>
         </div>
       </div>
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label class="form-label" for="image">이미지 Url</label>
         <input class="form-control" type="text" id="image" name="campground[image]" />
+      </div> -->
+      <div>
+        <input type="file" name="image" id="">
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">설명</label>
