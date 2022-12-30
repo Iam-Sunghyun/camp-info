@@ -3,15 +3,16 @@ const router = express.Router();
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
 const campground = require('../controllers/campgroundsControl');
 const catchAsyncError = require('../utils/catchAsyncError'); // 비동기(async) 라우트 핸들러 에러처리를 위한 모듈
+const { storage } = require('../cloudinary');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage });
 
 router.route('/')
   .get(catchAsyncError(campground.index)) // 캠핑장 페이지
   // .post(isLoggedIn, validateCampground, catchAsyncError(campground.createNewCampground)); // 새 캠핑장 추가
-  .post(upload.single('image'), (req, res) => {
+  .post(upload.array('image'), (req, res) => {
     console.log(req.body, req.file)
-    res.send('성공');
+    res.redirect('/campgrounds');
   });
 
 // 새 캠핑장 추가 페이지
