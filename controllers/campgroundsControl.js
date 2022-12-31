@@ -11,6 +11,10 @@ module.exports.renderCampgroundNew = (req, res) => {
 
 module.exports.createNewCampground = async (req, res) => {
   const campground = new Campground(req.body.campground);
+  campground.image = req.files.map(f => ({
+    url: f.path,
+    filename: f.filename
+  }));
   campground.author = req.user._id; // 게시물에 작성자(현재 로그인 사용자) 정보 저장
   await campground.save();
   req.flash('success', '새 캠핑장이 추가되었습니다.');
