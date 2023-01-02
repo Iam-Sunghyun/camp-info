@@ -2,30 +2,30 @@
 <div class="row">
   <h1 class="text-center">Edit Campground</h1>
   <div class="col-6 offset-3">
-    <form class="needs-validation" action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate>
+    <form class="needs-validation" action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" enctype="multipart/form-data" novalidate>
       <div class="mb-3">
         <label class="form-label" for="title">이름</label>
-        <input class="form-control" type="text" id="title" name="campground[title]" value="<%=campground.title %>" required/>
+        <input class="form-control" type="text" id="title" name="campground[title]" value="<%=campground.title %>" required />
         <div class="valid-feedback">사용 가능한 이름입니다!</div>
         <div class="invalid-feedback">이름을 입력하세요.</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="location">위치</label>
-        <input class="form-control" type="text" id="location" name="campground[location]" value="<%=campground.location %>" required/>
+        <input class="form-control" type="text" id="location" name="campground[location]" value="<%=campground.location %>" required />
         <div class="invalid-feedback">유효하지 않은 위치입니다.</div>
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">이용 가격</label>
         <div class="input-group">
           <span class="input-group-text" id="price-label">$</span>
-          <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]" value="<%=campground.price %>" required/>
+          <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price" aria-describedby="price-label" name="campground[price]" value="<%=campground.price %>" required />
           <div class="invalid-feedback">유효하지 않은 가격입니다.</div>
         </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label" for="image">이미지 Url</label>
-        <input class="form-control" type="text" id="image" name="campground[image]" value="<%=campground.image %>" />      </div>
-      <div class="mb-3">
+      <div>
+        <input type="file" name="image" id="" multiple />
+      </div>
+      <div>
         <label class="form-label" for="description">설명</label>
         <textarea class="form-control" type="text" id="description" name="campground[description]"><%= campground.description%></textarea>
       </div>
@@ -36,4 +36,3 @@
     <a href="/campgrounds/<%= campground._id%>">취소</a>
   </div>
 </div>
-

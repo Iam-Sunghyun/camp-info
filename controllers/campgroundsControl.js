@@ -50,6 +50,12 @@ module.exports.renderCampgroundEdit = async (req, res) => {
 
 module.exports.editCampground = async (req, res) => {
   const campground = await Campground.findByIdAndUpdate(req.params.id, req.body.campground);
+  const addedFile = req.files.map(f => ({
+    url: f.path,
+    filename: f.filename
+  }));
+  campground.image.push(...addedFile);
+  await campground.save();
   req.flash('success', '캠핑장 업데이트 완료!');
   res.redirect(`/campgrounds/${campground._id}`);
 };

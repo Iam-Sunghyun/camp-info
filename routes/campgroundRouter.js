@@ -16,7 +16,7 @@ router.get('/new', isLoggedIn, campground.renderCampgroundNew);
 
 router.route('/:id')
   .get(catchAsyncError(campground.renderCampgroundDetail)) // 특정 캠핑장 세부화면
-  .put(isLoggedIn, isAuthor, validateCampground, catchAsyncError(campground.editCampground)) // 특정 캠핑장 내용 수정
+  .put(isLoggedIn, isAuthor, upload.array('image'), validateCampground, catchAsyncError(campground.editCampground)) // 특정 캠핑장 내용 수정
   .delete(isLoggedIn, isAuthor, catchAsyncError(campground.deleteCampground)); // 캠핑장 삭제(mongoose 미들웨어로 달려있던 리뷰도 모두 삭제)
 
 // 특정 캠핑장 내용 수정 페이지
