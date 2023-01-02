@@ -25,13 +25,14 @@ module.exports.signup = async (req, res) => {
 
 module.exports.login = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return next(new ExpressError('이미 로그인중 입니다.', 400));
+    req.flash('error', '로그인 상태입니다.');
+    res.redirect('/campgrounds');
   }
   res.render('auth/login');
 };
 
 module.exports.successLogin = (req, res) => {
-  const redirectUrl = (req.session.returnTo && req.method === 'GET') || '/campgrounds';
+  const redirectUrl = req.session.returnTo || '/campgrounds'
   delete req.session.returnTo;
   req.flash('success', `${req.body.username}님 환영합니다!`);
   res.redirect(redirectUrl);
