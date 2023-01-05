@@ -12,7 +12,7 @@ cloudinary.config({
 // 요청에 전송된 multipart/form-data 파일을 cloudinary에 저장하는데 사용되는 객체(multer의 인수로 전달)
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {   // cloudinary에 저장할 때 사용되는 매개변수 값들
+  params: {   // cloudinary에 저장할 때 사용되는 설정 값들
     folder: 'CampInfo',
     allowedFormats : ['jpeg', 'jpg', 'png'], 
   },

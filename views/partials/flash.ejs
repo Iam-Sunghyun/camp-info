@@ -1,11 +1,4 @@
-<!-- 
-  req.locals의 변수 값이 있는지 확인하는 if (!typeof(success) === 'undefined') 코드 부분을
-  ↓ res.render('path', {success: false}); 혹은  if(locals.success)처럼 체크하는 방법도 있다. 
-  req.locals의 프로퍼티인 success가 할당이 안된 상태에서 if(success) 처럼 해버리면 터미널에 경고 메시지가 계속 뜬다..
--->
-
-<!-- req.locals.success 값이 있는지 확인하는 것 -->
-<!-- if (success && success.length)-->
+<!-- req.locals.success 값이 있는지 확인 -->
 <% if (success && success.length){ %> 
 <div class="alert alert-success alert-dismissible fade show" role="alert"> <!-- role="alert" 는 접근성을 위한 것 ex) 스크린 리더 사용자(정확한 기능이 뭐지?)-->
   <strong><%= success %></strong>
