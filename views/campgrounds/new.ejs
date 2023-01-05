@@ -20,15 +20,15 @@
       </div>
       <div class="mb-3">
         <label class="form-label" for="price">이용 가격</label>
-        <div class="input-group">
+        <div class="input-group mb-4">
           <span class="input-group-text" id="price-label">원</span>
           <input type="text" class="form-control" id="price" placeholder="0" aria-label="price" aria-describedby="price-label" name="campground[price]" min="0" required />
           <div class="invalid-feedback">유효하지 않은 가격입니다.</div>
         </div>
       </div>
-      <div>
       <!-- 이미지 파일 전송 폼 -->
-        <input type="file" name="image" id="" accept="image/png, image/jpeg, image/jpg" multiple>
+      <div class="input-group mb-3">
+        <input type="file" name="image" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">설명</label>
