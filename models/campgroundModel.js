@@ -2,12 +2,35 @@
 const mongoose = require('mongoose');
 const Review = require('./reviewModel');
 
+
+const imageSchema = new mongoose.Schema({
+  url: String,
+  filename: String
+});
+
+// cloudinary 참조 URL에 transformation 추가하는 가상 속성
+imageSchema.virtual('thumbnail').get(function () {
+  return this.url.replace('/upload', '/upload/w_400,h_350');  
+});
+
+imageSchema.virtual('detailImage').get(function () {
+  return this.url.replace('/upload', '/upload/w_500,h_550');  
+});
+
 const CampgroundSchema = new mongoose.Schema({
     title: String,
-    image: [{
-      url: String,
-      filename: String
-    }],
+    image: [imageSchema],
+    geometry: {
+      type: {
+        type: String, // Don't do `{ location: { type: String } }`
+        enum: ['Point'], // 'location.type' must be 'Point'
+        // required: true
+      },
+      coordinates: {
+        type: [Number],
+        // required: true
+      }
+    },
     price: Number,
     description: String,
     location: String,
