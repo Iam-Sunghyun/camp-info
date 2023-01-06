@@ -5,7 +5,7 @@
     <div class="col-6 ">
       <!-- 부트스트랩 인디케이터 캐러셀 -->
       <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
-        <!-- 인디케이터 -->
+        <!-- 하단 인디케이터 -->
         <div class="carousel-indicators">
           <% if(campground.image.length > 1) { %> 
             <% campground.image.forEach((img, i) => { %>
@@ -13,12 +13,19 @@
             <% }) %> 
           <% } %> 
         </div>
+        <!-- 캐러셀 이미지 -->
         <div class="carousel-inner">
-          <% campground.image.forEach((img, i) => { %>
-          <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-            <img src="<%= img.url %>" class="d-block w-100" alt="" width="500" height="550"/>
-          </div>
-          <% }) %> 
+          <% if(campground.image.length > 0) { %> 
+            <% campground.image.forEach((img, i) => { %>
+            <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+              <img src="<%= img.detailImage %>" class="d-block" alt="" />
+            </div>
+            <% }) %> 
+          <% } else { %> 
+            <div class="carousel-item active">
+              <img src="https://res.cloudinary.com/dowpf7g5p/image/upload/w_500,h_550/v1672975612/CampInfo/aezlyketdfwj9nwuz5yr.jpg" class="d-block" alt="" />
+            </div>
+          <% } %>
         </div>
         <!-- 화살표 버튼 -->
         <% if(campground.image.length > 1) { %> 
@@ -53,7 +60,8 @@
       <div class="card-footer text-muted">2 days ago <%- campground.author.username %> 작성 </div>
     </div>
   </div>
-
+  <!-- Mapbox GL JS -->
+  <div id='map' style='width: 400px; height: 300px;'></div>
   <div class="col-6 mt-3">
     <!-- 리뷰 작성 (로그인 유저만 보이는 부분) -->
     <!-- 사용자 정의 피드백 메시지를 사용하기 위한 novalidate 속성 설정 -->
@@ -63,7 +71,7 @@
         <!-- starability (별점 매기기) -->
         <fieldset class="starability-basic">
           <legend>평점</legend>
-          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="3" checked
               aria-label="No rating." />
           <input type="radio" id="first-rate1" name="review[rating]" value="1" />
           <label for="first-rate1" title="Terrible">1 star</label>
@@ -109,3 +117,11 @@
       </div>
     <% } %>
 </div>
+<!-- Mapbox GL JS 지도 렌더링에 사용되는 Mapbox 토큰 -->
+<script>
+  const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
+  const campground = '<%- JSON.stringify(campground) %>';
+  console.log(campground)
+</script>
+<!-- Mapbox GL JS 자바스크립트 -->
+<script src="/js/showPageMap.js"></script>
