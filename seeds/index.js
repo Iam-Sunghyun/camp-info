@@ -28,6 +28,10 @@ const seedDB = async () => {
       author: '6391dffd8a918d7d291e8007',
       price,
       description: 'Test text',
+      geometry: {
+        type: 'Point',
+        coordinates: [126.964239, 37.393507]
+      },
       image: [
         {
           url: 'https://res.cloudinary.com/dowpf7g5p/image/upload/v1672432725/CampInfo/vsk9ye7jop9erwenbxek.jpg',
