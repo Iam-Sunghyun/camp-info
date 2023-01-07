@@ -19,7 +19,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 // cities.js, seedHeplers.js 파일로 값 랜덤 조합
 const seedDB = async () => {
   await Campground.deleteMany({});
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 300; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 100000);
     const camp = new Campground({
@@ -30,7 +30,7 @@ const seedDB = async () => {
       description: 'Test text',
       geometry: {
         type: 'Point',
-        coordinates: [126.964239, 37.393507]
+        coordinates: [cities[random1000].longitude, cities[random1000].latitude]
       },
       image: [
         {
