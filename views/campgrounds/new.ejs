@@ -32,7 +32,8 @@
       </div>
       <div class="mb-3">
         <label class="form-label" for="description">설명</label>
-        <textarea class="form-control" type="text" id="description" name="campground[description]"></textarea>
+        <textarea class="form-control" type="text" id="description" name="campground[description]" required></textarea>
+        <div class="invalid-feedback">설명을 입력하세요.</div>
       </div>
       <div class="mb-3">
         <button class="btn btn-primary">확인</button>
@@ -41,4 +42,7 @@
     <a href="/campgrounds">취소</a>
   </div>
 </div>
+
+<!-- 클라이언트 측에서 유효하지 않은 필드 입력이 있는 경우 폼 제출을 비활성화하고 사용자 정의 피드백 메시지를 출력하기 위한 자바스크립트.-->
+<script src="/js/validateForm.js"></script>
 
