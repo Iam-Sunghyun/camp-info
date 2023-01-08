@@ -85,7 +85,7 @@ map.on('load', () => {
   // -> // https://docs.mapbox.com/help/getting-started/creating-data/
   map.on('click', 'unclustered-point', (e) => {
     const coordinates = e.features[0].geometry.coordinates.slice();
-    const properties = e.features[0].properties;
+    const [title, description, _id] = Object.values(e.features[0].properties);
 
     // Ensure that if the map is zoomed out such that
     // multiple copies of the feature are visible, the
@@ -94,7 +94,7 @@ map.on('load', () => {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    new mapboxgl.Popup().setLngLat(coordinates).setHTML(`<a href="/campgrounds/${properties[2]}"><h4>${properties[0]}</h4></a><br>${properties[1]}`).addTo(map);
+    new mapboxgl.Popup().setLngLat(coordinates).setHTML(`<a href="/campgrounds/${_id}"><h4>${title}</h4></a><br>${description}`).addTo(map);
   });
 
   map.on('mouseenter', 'clusters', () => {
