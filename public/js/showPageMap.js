@@ -13,7 +13,11 @@ const map = new mapboxgl.Map({
   zoom: 9, // 줌 설정
 });
 
+map.addControl(new mapboxgl.NavigationControl());
+
 // 기본 마커를 생성하고 map에 추가한다.
 new mapboxgl.Marker()
-.setLngLat(JSON.parse(campground).geometry.coordinates)
-.addTo(map);
+  .setLngLat(JSON.parse(campground).geometry.coordinates)
+  .addTo(map);
+
+  
