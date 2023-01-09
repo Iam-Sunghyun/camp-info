@@ -1,26 +1,38 @@
 <% layout('layouts/boilerplate')%>
-<h1>회원가입</h1>
-<form action="/users/signup" method="POST" class="needs-validation" novalidate>
-    <div class="mb-3">
-        <label class="form-label" for="username">Username</label>
-        <input class="form-control" type="text" id="username" name="username" required>
-        <div class="valid-feedback">
-          사용 가능합니다.
+
+<div class="container d-flex mt-1 mb-3">
+  <div class="justify-content-center">
+    <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+      <div class="card shadow">
+        <img
+          src="https://images.unsplash.com/photo-1475483768296-6163e08872a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=bottom&w=1000&h=750&q=80"
+          alt=""
+          class="card-img-top"
+        />
+        <div class="card-body">
+          <h5 class="card-title">회원가입</h5>
+          <form action="/users/signup" method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label" for="username">Username</label>
+              <input class="form-control" type="text" id="username" name="username" autofocus required />
+              <div class="valid-feedback">사용 가능합니다.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-control" type="email" id="email" name="email" required />
+              <div class="valid-feedback">사용 가능합니다.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="password">Password</label>
+              <input class="form-control" type="password" id="password" name="password" required />
+              <div class="valid-feedback">사용 가능합니다.</div>
+            </div>
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary">가 입</button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label" for="email">Email</label>
-        <input class="form-control" type="email" id="email" name="email" required>
-        <div class="valid-feedback">
-          사용 가능합니다.
-        </div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" for="password">Password</label>
-        <input class="form-control" type="password" id="password" name="password" required>
-        <div class="valid-feedback">
-          사용 가능합니다.
-        </div>
-    </div>
-    <button class="btn btn-success">Register</button>
-</form>
+  </div>
+</div>
