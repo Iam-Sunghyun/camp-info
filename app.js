@@ -18,10 +18,12 @@ const passport = require('passport');
 const campgroundRouter = require('./routes/campgroundRouter');
 const reviewRouter = require('./routes/reviewRouter');
 const userRouter = require('./routes/authRouter');
+const MongoStore = require('connect-mongo');
 const app = express();
+const dbUrl = process.env.MONGODB_URL;
 
 // MongoDB 연결
-mongoose.connect('mongodb://localhost:27017/CampInfo')
+mongoose.connect(dbUrl)
     .then(() => {
         console.log("MongoDB 연결 완료");
     }).catch(err => {
@@ -64,7 +66,15 @@ app.use(express.urlencoded({ extended: true })); // 요청 페이로드 파싱 �
 app.use(express.static(path.join(__dirname, 'public'))); // 템플릿에서 사용할 정적 파일(이미지, 동영상, js파일 등) 디렉토리 설정
 app.use(methodOverride('_method')); // method-override 모듈 쿼리 스트링 설정
 
+const store = MongoStore.create({
+  mongoUrl: 'mongodb://localhost:27017/CampInfo',
+  // 게으른 세션 업데이트(lazy session update)
+  // 세션에 변경이 없으면 재저장이 24시간에 한번 씩 이루어짐
+  touchAfter: 24 * 3600 
+})
+
 const sessionConfig = {
+    store,  // connect-mongo 세션 정보 객체를 전달하여 세션 저장 위치 설정
     secret: 'thisIsEasySecret',
     resave: false,
     saveUninitialized: true, // resave, saveUnintialized 차이는?
@@ -78,8 +88,8 @@ const sessionConfig = {
 
 app.use(session(sessionConfig)); // 세션 사용을 위한 express-session 로드
 
-//※중요※ passport 기본 설정 (express-session 설정) 다음에 위치해야됨
-// 이걸 빠트려서 req.isAuthenticated(), req.logout() 함수 참조가 안됐던 것..
+//※중요※ passport 기본 설정 (express-session 설정 다음에 위치해야됨)
+// 이걸 빠트려서 req.isAuthenticated(), req.logout() 함수 호출이 안됐던 것..
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -94,10 +104,9 @@ app.use((req, res, next) => {
   
 // 홈페이지
 app.get('/', (req, res) => {
-    res.send('홈 페이지');
+    res.send('home');
+    // res.render('/home');
 });
-
-
 
 // 캠핑장 라우터
 app.use('/campgrounds', campgroundRouter); 
@@ -107,7 +116,6 @@ app.use('/campgrounds/:id/reviews', reviewRouter);
 
 // 회원가입 / 로그인
 app.use('/users', userRouter);
-
 
 
 // 404 처리용 미들웨어
@@ -128,7 +136,7 @@ app.use((err, req, res, next) => {
     res.status(status).render('error', { err, status });
 });
 
-app.listen(3000, () => {
-    console.log('Server listening on port 3000...');
+app.listen(8080, () => {
+    console.log(`Server listening on port 8080...`);
 });
 
