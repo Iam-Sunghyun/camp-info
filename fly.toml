@@ -1,0 +1,47 @@
+# fly.toml file generated for campinfo on 2023-01-11T20:56:19+09:00
+
+app = "campinfo"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  builder = "heroku/buildpacks:20"
+
+[env]
+  PORT = "8080"
+  CLOUDINARY_CLOUD_NAME="dowpf7g5p"
+  CLOUDINARY_KEY="157928963436911"
+  CLOUDINARY_SECRET="t2E6fQ_mc9cBgKb_UJKJ8uGfqrk"
+  MAPBOX_TOKEN="pk.eyJ1IjoiaWFtc3VuZ2h5dW4iLCJhIjoiY2xjaXl1bG93MHgwOTN2cG5sZm5wZTIxZSJ9.dQOHNQ5OJcyhPSGc2IWDzA"
+  MONGODB_URL="mongodb+srv://sunghyun1160:wjs1376349!@campinfo.wjfnuj7.mongodb.net/?retryWrites=true&w=majority"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
