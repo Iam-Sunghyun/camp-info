@@ -13,7 +13,7 @@
 
       <!-- bootstrap5 : ml-auto -> ms-auto https://stackoverflow.com/questions/49022773/ml-auto-is-not-pushing-navbar-links-to-the-right -->
       <div class="navbar-nav ms-auto">
-        <% if(!currentUser) { %>
+        <% if(typeof currentUser === 'undefined') { %>
         <a class="nav-link" href="/users/signup">회원가입</a>
         <a class="nav-link" href="/users/login">로그인</a>
         <% } else { %>

@@ -49,7 +49,7 @@
           <li class="list-group-item">$<%= campground.price%>/night</li>
         </ul>
         <!-- 게시물 수정/삭제 (게시물 작성자만 보이는 부분) -->
-        <% if(currentUser && campground.author.equals(currentUser)) { %> 
+        <% if(typeof currentUser !== 'undefined' && campground.author.equals(currentUser)) { %> 
         <div class="card-body">
           <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">수정</a>
           <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
@@ -65,7 +65,7 @@
     <div class="mb-3" id="map"></div>
     <!-- 리뷰 작성 (로그인 유저만 보이는 부분) -->
     <!-- 사용자 정의 피드백 메시지를 사용하기 위한 novalidate 속성 설정 -->
-    <% if(currentUser) { %> 
+    <% if(typeof currentUser !== 'undefined') { %> 
     <form action="/campgrounds/<%=campground._id%>/reviews" class="mb-3 needs-validation" method="POST" novalidate>
       <div class="mb-3">
         <!-- starability (별점 매기기) -->
@@ -107,7 +107,7 @@
               <!-- <h6 class="card-subtitle mb-2 text-muted">id</h6> -->
               <p class="card-text mt-3" ><%=review.body%></p>
               <!-- 리뷰 삭제 (리뷰 작성자만 보이는 부분) -->
-              <% if(currentUser && review.author.equals(currentUser)) { %> 
+              <% if(typeof currentUser !== 'undefined' && review.author.equals(currentUser)) { %> 
               <form action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                 <button class="btn btn-danger mt-3">삭제</button>
               </form>
