@@ -16,6 +16,7 @@ processes = []
   MAPBOX_TOKEN="pk.eyJ1IjoiaWFtc3VuZ2h5dW4iLCJhIjoiY2xjaXl1bG93MHgwOTN2cG5sZm5wZTIxZSJ9.dQOHNQ5OJcyhPSGc2IWDzA"
   MONGODB_URL="mongodb+srv://sunghyun1160:wjs1376349!@campinfo.wjfnuj7.mongodb.net/?retryWrites=true&w=majority"
 
+
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
